@@ -3,3 +3,13 @@
 body {
   background: $c-body;
 }
+.App {
+  margin: 40px 0;
+}
+.container {
+  float: none;
+  clear: both;
+  max-width: $container;
+  margin-left: auto;
+  margin-right: auto;
+}
