@@ -1,18 +1,20 @@
-import React from "react"
-import "./product.scss"
-import moment from "moment"
+import React from "react";
+import "./product.scss";
+import moment from "moment";
 
+const Product = ({
+  product: { id, name, code, price, created_at, updated_at }
+}) => {
+  return (
+    <tr className="product-item">
+      <td className="id">{id}</td>
+      <td className="name">{name}</td>
+      <td className="code">{code}</td>
+      <td className="price">{price}</td>
+      <td className="created">{moment(created_at).format("DD/MM/YYYY")}</td>
+      <td className="updated">{moment(updated_at).format("DD/MM/YYYY")}</td>
+    </tr>
+  );
+};
 
-const Product = ({product}) => {
-
-  return <tr className="product-item">
-    <td className="id">{product.id}</td>
-    <td className="name">{product.name}</td>
-    <td className="code">{product.code}</td>
-    <td className="price">{product.price}</td>
-    <td className="created">{moment(product.created_at).format('DD/MM/YYYY')}</td>
-    <td className="updated">{moment(product.updated_at).format('DD/MM/YYYY')}</td>
-  </tr>
-}
-
-export default Product
+export default Product;
