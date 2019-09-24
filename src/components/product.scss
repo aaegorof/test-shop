@@ -35,3 +35,39 @@
     padding: 5px 10px;
   }
 }
+
+.product-card {
+  padding: $padding-min;
+  margin-top: $padding-min * 2;
+  border: 1px solid;
+  max-width: 50%;
+  min-width: 320px;
+  position: relative;
+  & > div {
+    margin-bottom: 10px;
+    .label {
+      margin-right: 0.4em;
+    }
+  }
+  h3{
+    margin-top: 0;
+    text-transform: uppercase;
+  }
+  .id {
+    text-transform: lowercase;
+    font-size: 0.8em;
+    color: $c-fade;
+    margin-left: 10px;
+  }
+  .price {
+    position: absolute;
+    top: $padding-min;
+    right: $padding-min;
+    font-size: 20px;
+  }
+
+  .label {
+    font-size: 0.8em;
+    color: $c-fade;
+  }
+}
