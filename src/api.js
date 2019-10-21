@@ -1,18 +1,21 @@
-export const getProducts = async (url, toState) => {
+const url = "http://test-app.viktor.ws/api/products";
+
+export const getProducts = async (callBack) => {
   if (!url) {
     throw new Error("Url should be specified");
   }
   try {
     const response = await fetch(url)
     const data = await response.json()
-    toState(data.data);
+    callBack(data.data);
   } catch (er) {
     console.error(er)
   }
 };
 
-export const fetchProduct = async (url, toState, {method = "GET", body = null, id = null} = {method: "GET"}) => {
-  if (!url) {
+export const fetchProduct = async (id, callBack, {method = "GET", body = null} = {method: "GET"}) => {
+  const productUrl = url + '/' + id
+  if (!productUrl) {
     throw new Error("Url should be specified");
   }
 
@@ -30,13 +33,11 @@ export const fetchProduct = async (url, toState, {method = "GET", body = null, i
   }
 
   try {
-    const response = await fetch(url, options)
+    const response = await fetch(productUrl, options)
     const data = await response.json()
 
-    toState(data.data);
+    callBack(data.data);
   } catch (er) {
     console.error(er)
   }
 };
-
-export default { getProducts };
