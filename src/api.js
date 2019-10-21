@@ -41,3 +41,5 @@ export const fetchProduct = async (id, callBack, {method = "GET", body = null} =
     console.error(er)
   }
 };
+
+export const deleteProduct = (id, callBack) => fetchProduct(id, callBack, {method: "DELETE"})

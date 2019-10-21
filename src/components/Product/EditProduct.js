@@ -4,7 +4,8 @@ import Input from "../Input/Input";
 
 export const EditProductCard = ({
   product,
-  updateProduct
+  updateProduct,
+                                  deleteProduct
 }) => {
   const [editedProduct, updateEditedProduct] = useState(product);
 
@@ -29,6 +30,7 @@ export const EditProductCard = ({
       <Input name="Price" value={editedProduct.price} onChange={updateField("price")}/>
 
       <button onClick={updateProduct(editedProduct)}>Update</button>
+      <button onClick={deleteProduct}>Delete</button>
     </div>
   );
 };

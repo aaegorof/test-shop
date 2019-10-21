@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createRef } from "react";
-import { getProducts, fetchProduct } from "./api";
+import { getProducts, fetchProduct, deleteProduct } from "./api";
 import "./styles/app.scss";
 import ProductCard from "./components/Product/ProductCard";
 import ProductItem from "./components/Product/ProductItem";
@@ -65,12 +65,20 @@ function App() {
     updateProducts(editedProduct);
   };
 
+  const delProduct = () => {
+    const removedProducts = products.filter(product => productCard.id !== product.id)
+    deleteProduct(productCard.id, () => {
+      changeProducts(removedProducts)
+    })
+    changeProductCard(null)
+  }
+
   return (
     <div className="App">
       <header className="App-header"></header>
 
       <div className="content container">
-        <h2>Products</h2>
+        <h2>Products ({products.length})</h2>
         {products && (
           <table className="products">
             <thead>
@@ -120,6 +128,7 @@ function App() {
             key={productCard.id}
             product={productCard}
             updateProduct={updateProduct}
+            deleteProduct={delProduct}
           />
         )}
       </div>
