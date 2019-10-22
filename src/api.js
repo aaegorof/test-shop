@@ -14,7 +14,7 @@ export const getProducts = async (callBack) => {
 };
 
 export const fetchProduct = async (id, callBack, {method = "GET", body = null} = {method: "GET"}) => {
-  const productUrl = url + '/' + id
+  const productUrl = id ? url + '/' + id : url
   if (!productUrl) {
     throw new Error("Url should be specified");
   }

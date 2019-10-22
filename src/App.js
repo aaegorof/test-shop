@@ -11,7 +11,6 @@ function sortedTableReducer(oldState, newState) {
   const { table, isDesc, sortBy, filter } = { ...oldState, ...newState };
   const direction = isDesc ? descend : ascend;
   const sortFunc = sort(direction(prop(sortBy)));
-  console.log(oldState);
   const sortedAndFilteredTable = Rfilter(
     item =>
       item.name.toLowerCase().includes(filter.toLowerCase()) ||
@@ -33,12 +32,13 @@ function updateSortedTable(table = [], sortBy, isDesc = true, filter = "") {
 
 function App() {
   const [products, changeProducts] = useState([]);
+  const [productCard, changeProductCard] = useState(null);
+  const [formProduct, updateFormProduct] = useState(null);
   const [sortedProducts, sortProductsDispatch] = updateSortedTable(
     products,
     "price",
     false
   );
-  const [productCard, changeProductCard] = useState(null);
 
   useEffect(() => {
     getProducts(changeProducts);
@@ -47,6 +47,46 @@ function App() {
   useEffect(() => {
     sortProductsDispatch({ table: products });
   }, [products]);
+
+  const showProduct = id => () => {
+    fetchProduct(id, changeProductCard);
+  };
+
+  const updateProduct = editedProduct => () => {
+    fetchProduct(editedProduct.id, changeProductCard, {
+      method: "PUT",
+      body: { ...editedProduct }
+    });
+    const newArr = [
+      ...products.filter(i => i.id !== editedProduct.id),
+      editedProduct
+    ];
+    changeProducts(newArr);
+  };
+
+  const showForm = () => {
+    updateFormProduct({
+      code: "",
+      name: "",
+      price: ""
+    })
+  }
+const addProduct = product => () => {
+  console.log(product);
+  fetchProduct(null, (data) => changeProducts([...products,data]), {
+    method: "POST",
+    body: { ...product }
+  });
+}
+  const delProduct = () => {
+    const removedProducts = products.filter(
+        product => productCard.id !== product.id
+    );
+    deleteProduct(productCard.id, () => {
+      changeProducts(removedProducts);
+    });
+    changeProductCard(null);
+  };
 
   const sort = column => () => {
     const direction =
@@ -64,54 +104,6 @@ function App() {
     return sortedProducts.isDesc ? "desc" : "asc";
   };
 
-  const showProduct = id => () => {
-    fetchProduct(id, changeProductCard);
-  };
-
-  // const updateProducts = data => {
-  //   const updatedProducts = products.filter(p => p.id !== data.id);
-  //   const sortColumn = Object.keys(sortByColumn)[0];
-  //   const withSort = sort(sortColumn, sortByColumn[sortColumn], [
-  //     ...updatedProducts,
-  //     data
-  //   ]);
-  //
-  //   adjustFilter(withSort);
-  // };
-
-  // const filterProducts = string => {
-  //    const newArray = products.filter( obj => {
-  //     return (
-  //       obj.name.toLowerCase().includes(string.toLowerCase()) ||
-  //       obj.price === string ||
-  //       obj.code.toLowerCase().includes(string.toLowerCase())
-  //     );
-  //   })
-  //   updateFilter(string)
-  //   adjustFilter(newArray)
-  // }
-
-  const updateProduct = editedProduct => () => {
-    fetchProduct(editedProduct.id, changeProductCard, {
-      method: "PUT",
-      body: {
-        name: editedProduct.name,
-        price: editedProduct.price,
-        code: editedProduct.code
-      }
-    });
-    //updateProducts(editedProduct);
-  };
-
-  const delProduct = () => {
-    const removedProducts = products.filter(
-      product => productCard.id !== product.id
-    );
-    deleteProduct(productCard.id, () => {
-      changeProducts(removedProducts);
-    });
-    changeProductCard(null);
-  };
 
   return (
     <div className="App">
@@ -133,7 +125,9 @@ function App() {
             <thead>
               <tr>
                 <th>
-                  <div onClick={sort("id")} className={sortClass("id")}>ID</div>
+                  <div onClick={sort("id")} className={sortClass("id")}>
+                    ID
+                  </div>
                 </th>
                 <th>
                   <div onClick={sort("name")} className={sortClass("name")}>
@@ -146,15 +140,25 @@ function App() {
                   </div>
                 </th>
                 <th>
-                  <div onClick={sort("price")} className={sortClass("price")}>Price</div>
+                  <div onClick={sort("price")} className={sortClass("price")}>
+                    Price
+                  </div>
                 </th>
                 <th>
-                  <div onClick={sort("created_at")}
-                       className={sortClass("created_at")}>Created</div>
+                  <div
+                    onClick={sort("created_at")}
+                    className={sortClass("created_at")}
+                  >
+                    Created
+                  </div>
                 </th>
                 <th>
-                  <div onClick={sort("updated_at")}
-                       className={sortClass("updated_at")}>Updated</div>
+                  <div
+                    onClick={sort("updated_at")}
+                    className={sortClass("updated_at")}
+                  >
+                    Updated
+                  </div>
                 </th>
               </tr>
             </thead>
@@ -179,6 +183,14 @@ function App() {
             updateProduct={updateProduct}
             deleteProduct={delProduct}
           />
+        )}
+
+        <button onClick={showForm}>Add product</button>
+        {formProduct && (
+            <EditProductCard
+                product={formProduct}
+                addProduct={addProduct}
+            />
         )}
       </div>
     </div>
