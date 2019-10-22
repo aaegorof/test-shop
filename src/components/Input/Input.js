@@ -1,19 +1,17 @@
-import React, {useState} from "react";
+import React from "react";
 
 const Input = ({
     name,
   className,
-  value,
+  value = null,
   onChange,
   placeholder,
   validator,
   disabled = false
 }) => {
 
-  const [val, updateVal] = useState(value)
 
   const changeVal = (e) =>  {
-    updateVal(e.target.value)
     onChange(e.target.value)
   }
 

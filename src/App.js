@@ -4,11 +4,14 @@ import "./styles/app.scss";
 import ProductCard from "./components/Product/ProductCard";
 import ProductItem from "./components/Product/ProductItem";
 import EditProductCard from "./components/Product/EditProduct";
+import Input from "./components/Input/Input";
 
 function App() {
   const [products, changeProducts] = useState([]);
+  const [filteredProducts, adjustFilter] = useState([]);
   const [sortByColumn, changeSortByColumn] = useState({});
   const [productCard, changeProductCard] = useState(null);
+  const [filterText, updateFilter] = useState(null);
 
   useEffect(() => {
     getProducts(changeProducts);
@@ -50,8 +53,20 @@ function App() {
       data
     ]);
 
-    changeProducts(withSort);
+    adjustFilter(withSort);
   };
+
+  const filterProducts = string => {
+     const newArray = products.filter( obj => {
+      return (
+        obj.name.toLowerCase().includes(string.toLowerCase()) ||
+        obj.price === string ||
+        obj.code.toLowerCase().includes(string.toLowerCase())
+      );
+    })
+    updateFilter(string)
+    adjustFilter(newArray)
+  }
 
   const updateProduct = editedProduct => () => {
     fetchProduct(editedProduct.id, changeProductCard, {
@@ -73,12 +88,16 @@ function App() {
     changeProductCard(null)
   }
 
+  const prdcts = filteredProducts.length ? filteredProducts : products
+
   return (
     <div className="App">
       <header className="App-header"></header>
 
       <div className="content container">
-        <h2>Products ({products.length})</h2>
+        <h2>Products ({products.length})
+          <Input text="Search" onChange={filterProducts} value={filterText}/>
+        </h2>
         {products && (
           <table className="products">
             <thead>
@@ -110,7 +129,7 @@ function App() {
               </tr>
             </thead>
             <tbody>
-              {products.map(product => (
+              {prdcts.map(product => (
                 <ProductItem
                   product={product}
                   key={product.id}

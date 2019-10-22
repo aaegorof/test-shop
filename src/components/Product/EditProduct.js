@@ -15,7 +15,7 @@ export const EditProductCard = ({
 
     updateEditedProduct({
       ...editedProduct,
-      [name] : val
+      [name] : val || 0
     });
   };
 
