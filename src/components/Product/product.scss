@@ -2,9 +2,10 @@
 .products {
   th {
     padding: 8px 12px;
+    padding-right: 24px;
     position: relative;
     cursor: pointer;
-    &.asc {
+    .asc, .desc {
       &:after {
         content: "";
         width: 0;
@@ -12,20 +13,15 @@
         border: 4px solid;
         border-color: $c-text $c-text transparent transparent;
         position: absolute;
-        top: 0;
         right: 0;
+        top: 35%;
+        transform: rotate(-45deg);
+        transform-origin: center;
       }
     }
-    &.desc {
+    .desc {
       &:after {
-        content: "";
-        width: 0;
-        height: 0;
-        border: 4px solid;
-        border-color: transparent $c-text $c-text transparent;
-        position: absolute;
-        bottom: 0;
-        right: 0;
+        transform: rotate(135deg);
       }
     }
   }

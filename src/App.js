@@ -1,72 +1,95 @@
-import React, { useState, useEffect, createRef } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 import { getProducts, fetchProduct, deleteProduct } from "./api";
 import "./styles/app.scss";
 import ProductCard from "./components/Product/ProductCard";
 import ProductItem from "./components/Product/ProductItem";
 import EditProductCard from "./components/Product/EditProduct";
 import Input from "./components/Input/Input";
+import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
+
+function sortedTableReducer(oldState, newState) {
+  const { table, isDesc, sortBy, filter } = { ...oldState, ...newState };
+  const direction = isDesc ? descend : ascend;
+  const sortFunc = sort(direction(prop(sortBy)));
+  console.log(oldState);
+  const sortedAndFilteredTable = Rfilter(
+    item =>
+      item.name.toLowerCase().includes(filter.toLowerCase()) ||
+      item.code.toString().includes(filter.toLowerCase()) ||
+      item.id.toString().includes(filter.toLowerCase()),
+    sortFunc(table)
+  );
+
+  return { table: sortedAndFilteredTable, filter, sortBy, isDesc };
+}
+
+function updateSortedTable(table = [], sortBy, isDesc = true, filter = "") {
+  const initialState = { isDesc, sortBy, table, filter };
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const [state, dispatch] = useReducer(sortedTableReducer, initialState);
+
+  return [state, dispatch];
+}
 
 function App() {
   const [products, changeProducts] = useState([]);
-  const [filteredProducts, adjustFilter] = useState([]);
-  const [sortByColumn, changeSortByColumn] = useState({});
+  const [sortedProducts, sortProductsDispatch] = updateSortedTable(
+    products,
+    "price",
+    false
+  );
   const [productCard, changeProductCard] = useState(null);
-  const [filterText, updateFilter] = useState(null);
 
   useEffect(() => {
     getProducts(changeProducts);
   }, []);
 
-  const sort = (column, direction, arr = products) => () => {
-    const newDirection = direction
-      ? direction
-      : sortByColumn[column] === "asc"
-      ? "desc"
-      : "asc";
+  useEffect(() => {
+    sortProductsDispatch({ table: products });
+  }, [products]);
 
-    changeSortByColumn({ [column]: newDirection });
-
-    const sortedProducts = arr.sort((a, b) => {
-      if (newDirection === "asc") {
-        if (a[column] < b[column]) return -1;
-        if (a[column] > b[column]) return 1;
-        return 0;
-      } else {
-        if (a[column] > b[column]) return -1;
-        if (a[column] < b[column]) return 1;
-        return 0;
-      }
+  const sort = column => () => {
+    const direction =
+      column === sortedProducts.sortBy ? !sortedProducts.isDesc : false;
+    sortProductsDispatch({
+      sortBy: column,
+      isDesc: direction
     });
+  };
 
-    return [...sortedProducts];
+  const sortClass = column => {
+    if (column !== sortedProducts.sortBy) {
+      return;
+    }
+    return sortedProducts.isDesc ? "desc" : "asc";
   };
 
   const showProduct = id => () => {
     fetchProduct(id, changeProductCard);
   };
 
-  const updateProducts = data => {
-    const updatedProducts = products.filter(p => p.id !== data.id);
-    const sortColumn = Object.keys(sortByColumn)[0];
-    const withSort = sort(sortColumn, sortByColumn[sortColumn], [
-      ...updatedProducts,
-      data
-    ]);
+  // const updateProducts = data => {
+  //   const updatedProducts = products.filter(p => p.id !== data.id);
+  //   const sortColumn = Object.keys(sortByColumn)[0];
+  //   const withSort = sort(sortColumn, sortByColumn[sortColumn], [
+  //     ...updatedProducts,
+  //     data
+  //   ]);
+  //
+  //   adjustFilter(withSort);
+  // };
 
-    adjustFilter(withSort);
-  };
-
-  const filterProducts = string => {
-     const newArray = products.filter( obj => {
-      return (
-        obj.name.toLowerCase().includes(string.toLowerCase()) ||
-        obj.price === string ||
-        obj.code.toLowerCase().includes(string.toLowerCase())
-      );
-    })
-    updateFilter(string)
-    adjustFilter(newArray)
-  }
+  // const filterProducts = string => {
+  //    const newArray = products.filter( obj => {
+  //     return (
+  //       obj.name.toLowerCase().includes(string.toLowerCase()) ||
+  //       obj.price === string ||
+  //       obj.code.toLowerCase().includes(string.toLowerCase())
+  //     );
+  //   })
+  //   updateFilter(string)
+  //   adjustFilter(newArray)
+  // }
 
   const updateProduct = editedProduct => () => {
     fetchProduct(editedProduct.id, changeProductCard, {
@@ -77,59 +100,66 @@ function App() {
         code: editedProduct.code
       }
     });
-    updateProducts(editedProduct);
+    //updateProducts(editedProduct);
   };
 
   const delProduct = () => {
-    const removedProducts = products.filter(product => productCard.id !== product.id)
+    const removedProducts = products.filter(
+      product => productCard.id !== product.id
+    );
     deleteProduct(productCard.id, () => {
-      changeProducts(removedProducts)
-    })
-    changeProductCard(null)
-  }
-
-  const prdcts = filteredProducts.length ? filteredProducts : products
+      changeProducts(removedProducts);
+    });
+    changeProductCard(null);
+  };
 
   return (
     <div className="App">
       <header className="App-header"></header>
 
       <div className="content container">
-        <h2>Products ({products.length})
-          <Input text="Search" onChange={filterProducts} value={filterText}/>
+        <h2>
+          Products ({sortedProducts.table.length}/{products.length})
         </h2>
+        <p>You can filter by name, code or ID. Start typing</p>
+        <Input
+          value={sortedProducts.filter}
+          onChange={val =>
+            sortProductsDispatch({ table: products, filter: val })
+          }
+        />
         {products && (
           <table className="products">
             <thead>
               <tr>
-                <th onClick={sort("id")} className={sortByColumn.id}>
-                  ID
+                <th>
+                  <div onClick={sort("id")} className={sortClass("id")}>ID</div>
                 </th>
-                <th onClick={sort("name")} className={sortByColumn.name}>
-                  Name
+                <th>
+                  <div onClick={sort("name")} className={sortClass("name")}>
+                    Name
+                  </div>
                 </th>
-                <th onClick={sort("code")} className={sortByColumn.code}>
-                  Code
+                <th>
+                  <div onClick={sort("code")} className={sortClass("code")}>
+                    Code
+                  </div>
                 </th>
-                <th onClick={sort("price")} className={sortByColumn.price}>
-                  Price
+                <th>
+                  <div onClick={sort("price")} className={sortClass("price")}>Price</div>
                 </th>
-                <th
-                  onClick={sort("created_at")}
-                  className={sortByColumn.created_at}
-                >
-                  Created
+                <th>
+                  <div onClick={sort("created_at")}
+                       className={sortClass("created_at")}>Created</div>
                 </th>
-                <th
-                  onClick={sort("updated_at")}
-                  className={sortByColumn.updated_at}
-                >
-                  Updated
+                <th>
+                  <div onClick={sort("updated_at")}
+                       className={sortClass("updated_at")}>Updated</div>
                 </th>
               </tr>
             </thead>
             <tbody>
-              {prdcts.map(product => (
+              {sortedProducts.table.map(product => (
                 <ProductItem
                   product={product}
                   key={product.id}

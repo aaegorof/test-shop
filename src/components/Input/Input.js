@@ -1,7 +1,7 @@
 import React from "react";
 
 const Input = ({
-    name,
+    text,
   className,
   value = null,
   onChange,
@@ -17,7 +17,7 @@ const Input = ({
 
   return (
     <label className="input-wrap">
-      <span>{name} :</span>
+      {text && <span>{text}:</span>}
       <input
         type="text"
         className={className}
