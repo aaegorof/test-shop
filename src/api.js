@@ -21,7 +21,8 @@ export const fetchProduct = async (id, callBack, {method = "GET", body = null} =
 
   const headers = {
     Accept: '*/*',
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8',
+    'Access-Control-Allow-Origin': '*'
   }
 
   const options = {
