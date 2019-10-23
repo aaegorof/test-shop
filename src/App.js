@@ -6,7 +6,7 @@ import ProductItem from "./components/Product/ProductItem";
 import AddProductForm from "./components/Product/AddProductForm";
 import Input from "./components/Input/Input";
 import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
-import {scrollToFooter} from "./helpers"
+import {scrollTo} from "./helpers"
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
 
@@ -53,6 +53,7 @@ function App() {
 
   const showProduct = id => () => {
     fetchProduct(id, changeProductCard);
+    setTimeout(scrollTo('.product-card'),300)
   };
 
   const updateProduct = editedProduct => () => {

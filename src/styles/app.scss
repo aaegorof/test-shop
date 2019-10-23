@@ -60,6 +60,7 @@ h2 {
 }
 .content {
   padding: $padding-min * 2 0;
+  padding-bottom: $padding-min * 4;
 }
 .button {
   display: inline-flex;
@@ -97,6 +98,10 @@ h2 {
   background: $c-body;
   color: $c-text;
   border: 1px solid;
+  span {
+    display: inline-block;
+    padding-bottom: 4px;
+  }
 }
 .flex {
   display: flex;
@@ -113,4 +118,11 @@ input[type=text] {
   color: rgba(#fff, 0.8);
   margin-top: $padding-min * 2;
   margin-top: auto;
+}
+
+.error {
+  color: $c-danger;
+  font-size: 10px;
+  line-height: 1.2;
+  display: inline-block;
 }

@@ -39,7 +39,7 @@ export const AddProductForm = ({ product, addProduct, close }) => {
   return (
     <div className="product-card add-product-form">
       <button className="close-button" onClick={close}>
-        x
+        <span>x</span>
       </button>
       <h3>Add a new product</h3>
       <div>
@@ -48,7 +48,7 @@ export const AddProductForm = ({ product, addProduct, close }) => {
           value={editedProduct.name}
           onChange={updateField("name")}
         />
-        {errors.name}
+        <div className="error">{errors.name}</div>
       </div>
       <div>
         <Input
@@ -58,7 +58,7 @@ export const AddProductForm = ({ product, addProduct, close }) => {
           mask={[/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
           onChange={updateField("code")}
         />
-        {errors.code}
+        <div className="error">{errors.code}</div>
       </div>
       <div>
         <Input
@@ -67,7 +67,7 @@ export const AddProductForm = ({ product, addProduct, close }) => {
           onChange={updateField("price")}
           validator={priceValidate}
         />
-        {errors.price}
+        <div className="error">{errors.price}</div>
       </div>
       <div className="button-group">
         {addProduct && (

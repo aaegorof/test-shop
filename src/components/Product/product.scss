@@ -73,6 +73,7 @@
     font-size: 20px;
     color: $c-text;
     text-align: right;
+    max-width: 120px;
     .label {
       margin-right: 0;
     }
@@ -113,5 +114,6 @@ input {
     background: transparent;
     border: none;
     color: $c-text;
+    padding-left: 0;
   }
 }
