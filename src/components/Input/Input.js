@@ -12,10 +12,11 @@ const Input = ({
   disabled = false
 }) => {
   const changeVal = e => {
-    const validated = validator(e.target.value) || e.target.value === ""
-    if(validated) {
-      onChange(e.target.value)
+    const validated = validator && validator(e.target.value) || e.target.value === ""
+    if(validator && !validated) {
+      return false
     }
+    onChange(e.target.value)
   };
 
   return (

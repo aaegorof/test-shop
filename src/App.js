@@ -6,6 +6,9 @@ import ProductItem from "./components/Product/ProductItem";
 import AddProductForm from "./components/Product/AddProductForm";
 import Input from "./components/Input/Input";
 import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
+import {scrollToFooter} from "./helpers"
+import Footer from "./components/Footer/Footer";
+import Header from "./components/Header/Header";
 
 function sortedTableReducer(oldState, newState) {
   const { table, isDesc, sortBy, filter } = { ...oldState, ...newState };
@@ -111,8 +114,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header"></header>
-
+      <Header/>
       <div className="content container">
         <h2>
           Products ({sortedProducts.table.length}/{products.length})
@@ -208,6 +210,7 @@ function App() {
 
 
       </div>
+      <Footer/>
     </div>
   );
 }

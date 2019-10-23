@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import "./product.scss";
 import Input from "../Input/Input";
-import {isNil} from "ramda";
+import { isNil } from "ramda";
+import { codeValidate, priceValidate } from "../../helpers";
 
 export const AddProductForm = ({ product, addProduct, close }) => {
   const [editedProduct, updateEditedProduct] = useState(product);
 
-  const [errors, updateErrors] = useState({})
+  const [errors, updateErrors] = useState({});
 
   const updateField = name => val => {
     updateEditedProduct({
@@ -15,56 +16,65 @@ export const AddProductForm = ({ product, addProduct, close }) => {
     });
   };
 
-  const priceValidate = (val) => /^\d+$/i.test(val)
-  const codeValidate = (val) => /^(\d){4}-(\d){4}/.test(val)
-
   const validateForm = () => {
     const validMessages = {
-      name: isNil(editedProduct.name) || !editedProduct.name?  "Required." :null,
-      code: codeValidate(editedProduct.code) ? null: "Required. Should be in format XXXX-XXXX and only digits",
-      price: priceValidate(editedProduct.price) ? null :"Required. Should be only digits"
+      name:
+        isNil(editedProduct.name) || !editedProduct.name ? "Required." : null,
+      code: codeValidate(editedProduct.code)
+        ? null
+        : "Required. Should be in format XXXX-XXXX and only digits",
+      price: priceValidate(editedProduct.price)
+        ? null
+        : "Required. Should be only digits"
+    };
+
+    updateErrors(validMessages);
+
+    /// if Error Obj has no values
+    if (Object.values(validMessages).every(x => isNil(x))) {
+      addProduct(editedProduct);
     }
-    console.log( editedProduct.name, codeValidate(editedProduct.code) , priceValidate(editedProduct.price));
-      updateErrors(validMessages)
-    /// if has no values
-    if( Object.values(validMessages).every(x => isNil(x)) ) {
-      addProduct(editedProduct)
-    }
-  }
+  };
 
   return (
     <div className="product-card add-product-form">
-      <button className="close-button" onClick={close}>x</button>
+      <button className="close-button" onClick={close}>
+        x
+      </button>
       <h3>Add a new product</h3>
       <div>
         <Input
-            text="Name"
-            value={editedProduct.name}
-            onChange={updateField("name")}
+          text="Name"
+          value={editedProduct.name}
+          onChange={updateField("name")}
         />
         {errors.name}
       </div>
       <div>
         <Input
-            text="Code"
-            value={editedProduct.code}
-            placeholder="XXXX-XXXX"
-            mask={[/\d/, /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-            onChange={updateField("code")}
+          text="Code"
+          value={editedProduct.code}
+          placeholder="XXXX-XXXX"
+          mask={[/\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/]}
+          onChange={updateField("code")}
         />
         {errors.code}
       </div>
       <div>
         <Input
-            text="Price"
-            value={editedProduct.price}
-            onChange={updateField("price")}
-            validator={priceValidate}
+          text="Price"
+          value={editedProduct.price}
+          onChange={updateField("price")}
+          validator={priceValidate}
         />
         {errors.price}
       </div>
       <div className="button-group">
-        {addProduct && <button className="button" onClick={validateForm}>Add</button>}
+        {addProduct && (
+          <button className="button" onClick={validateForm}>
+            Add
+          </button>
+        )}
       </div>
     </div>
   );

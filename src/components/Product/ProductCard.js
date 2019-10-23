@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./product.scss";
 import moment from "moment";
 import Input from "../Input/Input";
+import { priceValidate } from "../../helpers";
 export const ProductCard = props => {
   const { id, created_at, updated_at } = props.product;
   const {updateProduct, deleteProduct, close} = props
@@ -10,7 +11,7 @@ export const ProductCard = props => {
   const updateField = name => val => {
     updateEditedProduct({
       ...editedProduct,
-      [name]: val || 0
+      [name]: val || ""
     });
   };
   const  [editMode, changeMode] = useState(false);
@@ -25,7 +26,7 @@ export const ProductCard = props => {
         </h3>
         <div className="price">
           <div className="label">Price:</div>
-          <Input value={editedProduct.price} disabled={!editMode} onChange={updateField("price")}/>
+          <Input value={editedProduct.price} disabled={!editMode} onChange={updateField("price")} validator={priceValidate}/>
         </div>
       </div>
       <div className="code">
