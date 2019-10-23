@@ -8,10 +8,14 @@ const Input = ({
   onChange,
   placeholder,
   mask,
+  validator,
   disabled = false
 }) => {
   const changeVal = e => {
-    onChange(e.target.value);
+    const validated = validator(e.target.value) || e.target.value === ""
+    if(validated) {
+      onChange(e.target.value)
+    }
   };
 
   return (

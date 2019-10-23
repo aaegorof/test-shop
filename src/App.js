@@ -76,11 +76,12 @@ function App() {
     });
   };
 
-  const addProduct = product => () => {
+  const addProduct = product => {
     fetchProduct(null, data => changeProducts([...products, data]), {
       method: "POST",
       body: { ...product }
     });
+    updateFormProduct(null)
   };
   const delProduct = () => {
     const removedProducts = products.filter(
@@ -126,60 +127,73 @@ function App() {
             sortProductsDispatch({ table: products, filter: val })
           }
         />
-        {products && (
-          <table className="products">
-            <thead>
-              <tr>
-                <th>
-                  <div onClick={sort("id")} className={sortClass("id")}>
-                    ID
-                  </div>
-                </th>
-                <th>
-                  <div onClick={sort("name")} className={sortClass("name")}>
-                    Name
-                  </div>
-                </th>
-                <th>
-                  <div onClick={sort("code")} className={sortClass("code")}>
-                    Code
-                  </div>
-                </th>
-                <th>
-                  <div onClick={sort("price")} className={sortClass("price")}>
-                    Price
-                  </div>
-                </th>
-                <th>
-                  <div
-                    onClick={sort("created_at")}
-                    className={sortClass("created_at")}
-                  >
-                    Created
-                  </div>
-                </th>
-                <th>
-                  <div
-                    onClick={sort("updated_at")}
-                    className={sortClass("updated_at")}
-                  >
-                    Updated
-                  </div>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {sortedProducts.table.map(product => (
-                <ProductItem
-                  key={product.id}
-                  product={product}
-                  activeProduct={productCard}
-                  clickHandler={showProduct}
+        <div className="flex">
+          {products && (
+              <table className="products">
+                <thead>
+                <tr>
+                  <th>
+                    <div onClick={sort("id")} className={sortClass("id")}>
+                      ID
+                    </div>
+                  </th>
+                  <th>
+                    <div onClick={sort("name")} className={sortClass("name")}>
+                      Name
+                    </div>
+                  </th>
+                  <th>
+                    <div onClick={sort("code")} className={sortClass("code")}>
+                      Code
+                    </div>
+                  </th>
+                  <th>
+                    <div onClick={sort("price")} className={sortClass("price")}>
+                      Price
+                    </div>
+                  </th>
+                  <th>
+                    <div
+                        onClick={sort("created_at")}
+                        className={sortClass("created_at")}
+                    >
+                      Created
+                    </div>
+                  </th>
+                  <th>
+                    <div
+                        onClick={sort("updated_at")}
+                        className={sortClass("updated_at")}
+                    >
+                      Updated
+                    </div>
+                  </th>
+                </tr>
+                </thead>
+                <tbody>
+                {sortedProducts.table.map(product => (
+                    <ProductItem
+                        key={product.id}
+                        product={product}
+                        activeProduct={productCard}
+                        clickHandler={showProduct}
+                    />
+                ))}
+                </tbody>
+              </table>
+          )}
+          <div className="add-product-wrap">
+            {addProductForm && (
+                <AddProductForm
+                    product={addProductForm}
+                    addProduct={addProduct}
+                    close={() => updateFormProduct(null)}
                 />
-              ))}
-            </tbody>
-          </table>
-        )}
+            )}
+          </div>
+
+        </div>
+
 
         {productCard && (
           <ProductCard
@@ -192,13 +206,7 @@ function App() {
           />
         )}
 
-        {addProductForm && (
-          <AddProductForm
-            product={addProductForm}
-            addProduct={addProduct}
-            close={() => updateFormProduct(null)}
-          />
-        )}
+
       </div>
     </div>
   );
