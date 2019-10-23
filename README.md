@@ -1,5 +1,5 @@
 This project is for a test purpose. Just simple sort, filter table with products with REST API fetch,update,post.
-
+### [Watch in browser](https://github.com/aaegorof/test-shop/build/)  
 ## How to start
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 In the project directory, you can run:
