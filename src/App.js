@@ -3,7 +3,7 @@ import { getProducts, fetchProduct, deleteProduct } from "./api";
 import "./styles/app.scss";
 import ProductCard from "./components/Product/ProductCard";
 import ProductItem from "./components/Product/ProductItem";
-import EditProductCard from "./components/Product/EditProduct";
+import AddProductForm from "./components/Product/AddProductForm";
 import Input from "./components/Input/Input";
 import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
 
@@ -33,7 +33,7 @@ function updateSortedTable(table = [], sortBy, isDesc = true, filter = "") {
 function App() {
   const [products, changeProducts] = useState([]);
   const [productCard, changeProductCard] = useState(null);
-  const [formProduct, updateFormProduct] = useState(null);
+  const [addProductForm, updateFormProduct] = useState(null);
   const [sortedProducts, sortProductsDispatch] = updateSortedTable(
     products,
     "price",
@@ -64,23 +64,27 @@ function App() {
     changeProducts(newArr);
   };
 
-  const showForm = () => {
-    updateFormProduct({
-      code: "",
+  const showForm = product => () => {
+    const defaultForm = {
       name: "",
-      price: ""
-    })
-  }
-const addProduct = product => () => {
-  console.log(product);
-  fetchProduct(null, (data) => changeProducts([...products,data]), {
-    method: "POST",
-    body: { ...product }
-  });
-}
+      price: "",
+      code: ""
+    };
+    updateFormProduct({
+      ...defaultForm,
+      ...product
+    });
+  };
+
+  const addProduct = product => () => {
+    fetchProduct(null, data => changeProducts([...products, data]), {
+      method: "POST",
+      body: { ...product }
+    });
+  };
   const delProduct = () => {
     const removedProducts = products.filter(
-        product => productCard.id !== product.id
+      product => productCard.id !== product.id
     );
     deleteProduct(productCard.id, () => {
       changeProducts(removedProducts);
@@ -104,7 +108,6 @@ const addProduct = product => () => {
     return sortedProducts.isDesc ? "desc" : "asc";
   };
 
-
   return (
     <div className="App">
       <header className="App-header"></header>
@@ -112,6 +115,9 @@ const addProduct = product => () => {
       <div className="content container">
         <h2>
           Products ({sortedProducts.table.length}/{products.length})
+          <button className="button" onClick={showForm()}>
+            +
+          </button>
         </h2>
         <p>You can filter by name, code or ID. Start typing</p>
         <Input
@@ -165,8 +171,9 @@ const addProduct = product => () => {
             <tbody>
               {sortedProducts.table.map(product => (
                 <ProductItem
-                  product={product}
                   key={product.id}
+                  product={product}
+                  activeProduct={productCard}
                   clickHandler={showProduct}
                 />
               ))}
@@ -174,23 +181,23 @@ const addProduct = product => () => {
           </table>
         )}
 
-        {productCard && <ProductCard product={productCard} />}
-
         {productCard && (
-          <EditProductCard
+          <ProductCard
             key={productCard.id}
             product={productCard}
+            editMode={showForm}
             updateProduct={updateProduct}
             deleteProduct={delProduct}
+            close={() => changeProductCard(null)}
           />
         )}
 
-        <button onClick={showForm}>Add product</button>
-        {formProduct && (
-            <EditProductCard
-                product={formProduct}
-                addProduct={addProduct}
-            />
+        {addProductForm && (
+          <AddProductForm
+            product={addProductForm}
+            addProduct={addProduct}
+            close={() => updateFormProduct(null)}
+          />
         )}
       </div>
     </div>

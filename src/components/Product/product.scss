@@ -29,6 +29,10 @@
 .product-item {
   td {
     padding: 5px 10px;
+    cursor: pointer;
+  }
+  &.active {
+    background: rgba($c-primary, 0.1);
   }
 }
 
@@ -41,29 +45,68 @@
   position: relative;
   & > div {
     margin-bottom: 10px;
-    .label {
+    .label, span {
       margin-right: 0.4em;
     }
   }
   h3{
     margin-top: 0;
     text-transform: uppercase;
+    input {
+      font-size: 26px;
+      text-transform: uppercase;
+      color: $c-text;
+    }
   }
   .id {
     text-transform: lowercase;
     font-size: 0.8em;
     color: $c-fade;
-    margin-left: 10px;
+    margin-right: 10px;
+    display: block;
   }
   .price {
     position: absolute;
     top: $padding-min;
     right: $padding-min;
     font-size: 20px;
+    color: $c-text;
+    text-align: right;
+    .label {
+      margin-right: 0;
+    }
+    input {
+      font-size: 20px;
+      width: 100px;
+      text-align: right;
+      color: $c-text;
+    }
   }
 
   .label {
     font-size: 0.8em;
     color: $c-fade;
+  }
+  .button-group {
+    margin-top: 30px;
+    margin-bottom: 0;
+    display: flex;
+    .danger {
+      margin-left: auto;
+    }
+  }
+}
+.add-product-form {
+  input {
+    display: block;
+  }
+}
+
+input {
+  font-size: 16px;
+  &:disabled {
+    background: transparent;
+    border: none;
+    color: $c-text;
   }
 }

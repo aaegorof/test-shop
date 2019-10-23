@@ -6,10 +6,50 @@ body {
 .App {
   margin: 40px 0;
 }
+h2 {
+  .button {
+    margin-left: 30px;
+  }
+}
 .container {
   float: none;
   clear: both;
   max-width: $container;
   margin-left: auto;
   margin-right: auto;
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 20px;
+  background: $c-primary;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  outline: none;
+  &.danger {
+    background: $c-danger;
+  }
+  & + .button {
+    margin-left: 10px;
+  }
+}
+.close-button {
+  position: absolute;
+  right: -15px;
+  top: -15px;
+  line-height: 1;
+  width: 40px;
+  height: 40px;
+  font-size: 22px;
+  text-align: center;
+  padding: 0;
+  border-radius: 50%;
+  justify-content: center;
+  background: $c-danger;
+  color: white;
+  outline: none;
+  cursor: pointer;
 }

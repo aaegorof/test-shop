@@ -4,10 +4,14 @@ import moment from "moment";
 
 const ProductItem = ({
   product: { id, name, code, price, created_at, updated_at },
-  clickHandler
+  clickHandler,
+  activeProduct
 }) => {
   return (
-    <tr className="product-item" onClick={clickHandler(id)}>
+    <tr
+      className={`product-item ${activeProduct && activeProduct.id === id ? "active" : ""}`}
+      onClick={clickHandler(id)}
+    >
       <td className="id">{id}</td>
       <td className="name">{name}</td>
       <td className="code">{code}</td>
