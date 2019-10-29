@@ -47,16 +47,18 @@ function App() {
     getProducts(changeProducts);
   }, []);
 
+
   useEffect(() => {
     sortProductsDispatch({ table: products });
+    // eslint-disable-next-line
   }, [products]);
 
   const showProduct = id => () => {
     fetchProduct(id, changeProductCard);
-    setTimeout(scrollTo('.product-card'),300)
+    setTimeout(scrollTo('.product-card.edit'),300)
   };
 
-  const updateProduct = editedProduct => () => {
+  const updateProduct = editedProduct => {
     fetchProduct(editedProduct.id, changeProductCard, {
       method: "PUT",
       body: { ...editedProduct }
@@ -123,7 +125,8 @@ function App() {
             +
           </button>
         </h2>
-        <p>You can filter by name, code or ID. Start typing</p>
+        <p>You can filter by name, code or ID. Start typing.<br/>
+          You can sort the table by clicking on any column header.</p>
         <Input
           value={sortedProducts.filter}
           onChange={val =>

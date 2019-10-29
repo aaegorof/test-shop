@@ -38,7 +38,7 @@ export const ProductCard = props => {
   };
 
   return (
-    <div className="product-card">
+    <div className="product-card edit">
       <button className="close-button" onClick={close}><span>x</span></button>
       <div className="flex">
         <h3>
