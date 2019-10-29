@@ -9,7 +9,9 @@ const ProductItem = ({
 }) => {
   return (
     <tr
-      className={`product-item ${activeProduct && activeProduct.id === id ? "active" : ""}`}
+      className={`product-item ${
+        activeProduct && activeProduct.id === id ? "active" : ""
+      }`}
       onClick={clickHandler(id)}
     >
       <td className="id">{id}</td>

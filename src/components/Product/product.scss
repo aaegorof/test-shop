@@ -6,7 +6,8 @@
     padding-right: 24px;
     position: relative;
     cursor: pointer;
-    .asc, .desc {
+    .asc,
+    .desc {
       &:after {
         content: "";
         width: 0;
@@ -46,11 +47,12 @@
   position: relative;
   & > div {
     margin-bottom: 10px;
-    .label, span {
+    .label,
+    span {
       margin-right: 0.4em;
     }
   }
-  h3{
+  h3 {
     margin-top: 0;
     text-transform: uppercase;
     input {
