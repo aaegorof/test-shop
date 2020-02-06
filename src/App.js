@@ -9,6 +9,7 @@ import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
 import { scrollTo } from "./helpers";
 import Footer from "./components/Footer/Footer";
 import Header from "./components/Header/Header";
+import Table from "./components/Table/Table";
 
 function sortedTableReducer(oldState, newState) {
   const { table, isDesc, sortBy, filter } = { ...oldState, ...newState };
@@ -46,11 +47,6 @@ function App() {
   useEffect(() => {
     getProducts(changeProducts);
   }, []);
-
-  useEffect(() => {
-    sortProductsDispatch({ table: products });
-    // eslint-disable-next-line
-  }, [products]);
 
   const showProduct = id => () => {
     fetchProduct(id, changeProductCard);
@@ -116,7 +112,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
+
       <div className="content container">
         <h2>
           Products ({sortedProducts.table.length}/{products.length})
@@ -129,67 +125,14 @@ function App() {
           <br />
           You can sort the table by clicking on any column header.
         </p>
-        <Input
-          value={sortedProducts.filter}
-          onChange={val =>
-            sortProductsDispatch({ table: products, filter: val })
-          }
-        />
         <div className="flex">
-          {products && (
-            <table className="products">
-              <thead>
-                <tr>
-                  <th>
-                    <div onClick={sort("id")} className={sortClass("id")}>
-                      ID
-                    </div>
-                  </th>
-                  <th>
-                    <div onClick={sort("name")} className={sortClass("name")}>
-                      Name
-                    </div>
-                  </th>
-                  <th>
-                    <div onClick={sort("code")} className={sortClass("code")}>
-                      Code
-                    </div>
-                  </th>
-                  <th>
-                    <div onClick={sort("price")} className={sortClass("price")}>
-                      Price
-                    </div>
-                  </th>
-                  <th>
-                    <div
-                      onClick={sort("created_at")}
-                      className={sortClass("created_at")}
-                    >
-                      Created
-                    </div>
-                  </th>
-                  <th>
-                    <div
-                      onClick={sort("updated_at")}
-                      className={sortClass("updated_at")}
-                    >
-                      Updated
-                    </div>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedProducts.table.map(product => (
-                  <ProductItem
-                    key={product.id}
-                    product={product}
-                    activeProduct={productCard}
-                    clickHandler={showProduct}
-                  />
-                ))}
-              </tbody>
-            </table>
+          {products.length > 0 && (
+
+              <div style={{margin: 20}}>
+                <Table listArray={products} filteredKey="name" callback={val => console.log(val)}/>
+              </div>
           )}
+
           <div className="add-product-wrap">
             {addProductForm && (
               <AddProductForm
@@ -212,7 +155,7 @@ function App() {
           />
         )}
       </div>
-      <Footer />
+
     </div>
   );
 }
