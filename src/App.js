@@ -2,9 +2,7 @@ import React, { useState, useEffect, useReducer } from "react";
 import { getProducts, fetchProduct, deleteProduct } from "./api";
 import "./styles/app.scss";
 import ProductCard from "./components/Product/ProductCard";
-import ProductItem from "./components/Product/ProductItem";
 import AddProductForm from "./components/Product/AddProductForm";
-import Input from "./components/Input/Input";
 import { ascend, descend, prop, sort, filter as Rfilter } from "ramda";
 import { scrollTo } from "./helpers";
 import Footer from "./components/Footer/Footer";
@@ -94,25 +92,8 @@ function App() {
     changeProductCard(null);
   };
 
-  const sort = column => () => {
-    const direction =
-      column === sortedProducts.sortBy ? !sortedProducts.isDesc : false;
-    sortProductsDispatch({
-      sortBy: column,
-      isDesc: direction
-    });
-  };
-
-  const sortClass = column => {
-    if (column !== sortedProducts.sortBy) {
-      return;
-    }
-    return sortedProducts.isDesc ? "desc" : "asc";
-  };
-
   return (
     <div className="App">
-
       <div className="content container">
         <h2>
           Products ({sortedProducts.table.length}/{products.length})
@@ -121,15 +102,19 @@ function App() {
           </button>
         </h2>
         <p>
-          You can filter by name, code or ID. Start typing.
+          You can filter by any column name, just pass it through <code>filteredKey</code> prop.
           <br />
           You can sort the table by clicking on any column header.
+          <br/>
+          You pass any function to the <code>callback</code> prop, it will receive all the object at any state change.
+          <br/>
+          You can specify labels through <code>labels</code> prop, which receives an array of objects where key is the key of every object in array of list
+          and the value is the desired label, like <code>{`labels={{name: "Имечко", created_at :"Создано", updated_at: "Обновлено"}}`}</code>
         </p>
         <div className="flex">
           {products.length > 0 && (
-
               <div style={{margin: 20}}>
-                <Table listArray={products} filteredKey="name" callback={val => console.log(val)}/>
+                <Table listArray={products} filteredKey="name" labels={{name: "Имечко", created_at :"Создано", updated_at: "Обновлено"}} callback={val => console.log(val)}/>
               </div>
           )}
 

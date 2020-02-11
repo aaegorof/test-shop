@@ -66,11 +66,12 @@ const Table = ({
   callback,
   ...rest
 }) => {
+  const mixLabels = {...defaultLabels(listArray), ...labels}
   const [sortedListArray, sortProductsDispatch] = useReducer(
     sortedTableReducer,
     {
       /// Reorders the columns of the table to fit the labels props if it is provided
-      listArray: listArray.map(row => reorderPropinObj(row, labels)),
+      listArray: listArray.map(row => reorderPropinObj(row, mixLabels)),
       sortBy,
       isDesc,
       filter,
@@ -97,23 +98,26 @@ const Table = ({
 
   return (
     <div className="table-wrap" {...rest}>
-      {filteredKey && (
-        <Input
-          value={sortedListArray.filter}
-          onChange={val =>
-            sortProductsDispatch({
-              listArray: listArray.map(item => reorderPropinObj(item, labels)),
-              filter: val
-            })
-          }
-        />
-      )}
-
+      <div className="table-header">
+        {filteredKey && (
+            <Input
+                value={sortedListArray.filter}
+                text={`You can filter by ${filteredKey}`}
+                onChange={val =>
+                    sortProductsDispatch({
+                      listArray: listArray.map(item => reorderPropinObj(item, mixLabels)),
+                      filter: val
+                    })
+                }
+            />
+        )}
+        <div className="table-count">{sortedListArray.listArray.length}/{listArray.length}</div>
+      </div>
       {sortedListArray.listArray.length && (
         <table>
           <thead>
             <tr>
-              {Object.entries(labels).map(([columnKey, columnLabel]) => (
+              {Object.entries(mixLabels).map(([columnKey, columnLabel]) => (
                 <th key={columnKey}>
                   <div onClick={sort(columnKey)}>{columnLabel}</div>
                 </th>

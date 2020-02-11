@@ -1,0 +1,26 @@
+.input-wrap{
+  $height: 40px;
+  input {
+    height: $height;
+  }
+  .input-label {
+    position: relative;
+    min-height: $height;
+    display: block;
+    button {
+      position: absolute;
+      right: 0;
+      top: 0;
+      outline: none;
+      background: transparent;
+      border: none;
+      min-width: $height;
+      height: $height;
+      color: #999;
+      transform: scaleX(1.2);
+      font-size: 1em;
+      cursor: pointer;
+    }
+  }
+}
+

@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import MaskedInput from "react-text-mask";
+import "./style.scss";
 
 const Input = ({
   text,
   className,
+  type,
   value = null,
   onChange,
   placeholder,
   mask,
   validator,
-  disabled = false
+  disabled = false,
+  style
 }) => {
-  const changeVal = e => {
+  const innerRef = useRef(null);
+  const [initPlaceholder, setInitPlaceholder] = useState(placeholder);
+
+  const _onChange = e => {
     const validated =
       (validator && validator(e.target.value)) || e.target.value === "";
     if (validator && !validated) {
@@ -19,10 +25,11 @@ const Input = ({
     }
     onChange(e.target.value);
   };
+  const onClear = () => onChange("");
 
   return (
-    <>
-      {text && <span>{text}:</span>}
+    <div className="input-wrap">
+      {text && <div>{text}:</div>}
       {mask && (
         <MaskedInput
           type="text"
@@ -31,24 +38,33 @@ const Input = ({
           value={value}
           mask={mask}
           placeholderChar={"\u2000"}
-          onChange={changeVal}
+          onChange={_onChange}
           disabled={disabled}
+          className={className}
         />
       )}
 
       {!mask && (
-        <label className="input-wrap">
+        <label className="input-label">
           <input
-            type="text"
-            className={className}
-            onChange={changeVal}
-            placeholder={placeholder}
-            disabled={disabled}
             value={value}
+            disabled={disabled}
+            onChange={_onChange}
+            onFocus={() => setInitPlaceholder("")}
+            onBlur={() => setInitPlaceholder(placeholder)}
+            ref={innerRef}
+            placeholder={initPlaceholder}
+            type={type || "text"}
+            style={{ width: "100%" }}
           />
+          {value && (
+            <button className="clear" onClick={onClear}>
+              x
+            </button>
+          )}
         </label>
       )}
-    </>
+    </div>
   );
 };
 
