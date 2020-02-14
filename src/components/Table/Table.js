@@ -118,7 +118,7 @@ const Table = ({
           <thead>
             <tr>
               {Object.entries(mixLabels).map(([columnKey, columnLabel]) => (
-                <th key={columnKey}>
+                <th key={columnKey} className={columnKey === sortedListArray.sortBy && (sortedListArray.isDesc ? "desc" : "asc")}>
                   <div onClick={sort(columnKey)}>{columnLabel}</div>
                 </th>
               ))}

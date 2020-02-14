@@ -6,8 +6,8 @@
     padding-right: 24px;
     position: relative;
     cursor: pointer;
-    .asc,
-    .desc {
+    &.asc,
+    &.desc {
       &:after {
         content: "";
         width: 0;
@@ -21,7 +21,7 @@
         transform-origin: center;
       }
     }
-    .desc {
+    &.desc {
       &:after {
         transform: rotate(135deg);
       }

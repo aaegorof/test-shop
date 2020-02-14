@@ -114,7 +114,7 @@ function App() {
         <div className="flex">
           {products.length > 0 && (
               <div style={{margin: 20}}>
-                <Table listArray={products} filteredKey="name" labels={{name: "Имечко", created_at :"Создано", updated_at: "Обновлено"}} callback={val => console.log(val)}/>
+                <Table className="products" listArray={products} filteredKey="name" labels={{name: "Имечко", created_at :"Создано", updated_at: "Обновлено"}} callback={val => console.log(val)}/>
               </div>
           )}
 
